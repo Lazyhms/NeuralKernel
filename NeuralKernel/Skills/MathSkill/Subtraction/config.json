@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "type": "completion",
+  "description": "计算两个数字的减法（num1 - num2）",
+  "input_variables": [
+    {
+      "name": "num1",
+      "description": "被减数",
+      "is_required": true
+    },
+    {
+      "name": "num2",
+      "description": "减数",
+      "is_required": true
+    }
+  ],
+  "execution_settings": {
+    "default": {
+      "model_id": "qwen3.5:27b",
+      "max_tokens": 10,
+      "temperature": 0,
+      "top_p": 1
+    }
+  }
+}

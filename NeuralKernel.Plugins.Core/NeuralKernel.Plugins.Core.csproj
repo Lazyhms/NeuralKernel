@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TargetFramework>net10.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.77.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj" />
+	</ItemGroup>
+</Project>

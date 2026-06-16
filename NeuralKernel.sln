@@ -1,0 +1,60 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.McpServer", "NeuralKernel.McpServer\NeuralKernel.McpServer.csproj", "{FE9BC833-8519-4D0E-A14D-AF6F568ED97A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel", "NeuralKernel\NeuralKernel.csproj", "{5B68813F-23C2-8DF2-1B1F-9033A2893F62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Core", "NeuralKernel.Core\NeuralKernel.Core.csproj", "{E58117C5-C3AE-4E95-A59E-BE9C3310EE64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Core", "NeuralKernel.Plugins.Core\NeuralKernel.Plugins.Core.csproj", "{00751510-0AAC-4F17-A5D2-FEB340E7C93A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Abstractions", "NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj", "{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Document", "NeuralKernel.Plugins.Document\NeuralKernel.Plugins.Document.csproj", "{DDBD42CF-5287-4C59-B293-FC146C5DE02C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.SpeechToText", "NeuralKernel.Plugins.SpeechToText\NeuralKernel.Plugins.SpeechToText.csproj", "{8963509B-11D6-4543-8738-0A6FDEAFFF86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE9BC833-8519-4D0E-A14D-AF6F568ED97A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE9BC833-8519-4D0E-A14D-AF6F568ED97A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE9BC833-8519-4D0E-A14D-AF6F568ED97A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE9BC833-8519-4D0E-A14D-AF6F568ED97A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B68813F-23C2-8DF2-1B1F-9033A2893F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B68813F-23C2-8DF2-1B1F-9033A2893F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B68813F-23C2-8DF2-1B1F-9033A2893F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B68813F-23C2-8DF2-1B1F-9033A2893F62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E58117C5-C3AE-4E95-A59E-BE9C3310EE64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E58117C5-C3AE-4E95-A59E-BE9C3310EE64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E58117C5-C3AE-4E95-A59E-BE9C3310EE64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E58117C5-C3AE-4E95-A59E-BE9C3310EE64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8963509B-11D6-4543-8738-0A6FDEAFFF86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8963509B-11D6-4543-8738-0A6FDEAFFF86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8963509B-11D6-4543-8738-0A6FDEAFFF86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8963509B-11D6-4543-8738-0A6FDEAFFF86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1689F0BF-4069-485D-8DE7-E2B38B39B8DC}
+	EndGlobalSection
+EndGlobal

@@ -1,4 +1,4 @@
-﻿using NeuralKernel.Plugins.Document.Html;
+﻿﻿using NeuralKernel.Plugins.Document.Html;
 using NeuralKernel.Plugins.Document.Office;
 using NeuralKernel.Plugins.Document.Pdf;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +17,13 @@ public static class DocumentPluginExtensions
         builder.Services.AddSingleton<IFileReader, MsPowerPointReader>();
         builder.Services.AddSingleton<IFileReader, Text.TextReader>();
         builder.Services.AddSingleton<IFileReader, Text.MarkDownReader>();
+
+        builder.Services.AddSingleton<IFileWriter, Text.TextWriter>();
+        builder.Services.AddSingleton<IFileWriter, Text.MarkDownWriter>();
+        builder.Services.AddSingleton<IFileWriter, Text.JsonWriter>();
+        builder.Services.AddSingleton<IFileWriter, HtmlWriter>();
+        builder.Services.AddSingleton<IFileWriter, MsWordWriter>();
+        builder.Services.AddSingleton<IFileWriter, MsExcelWriter>();
 
         builder.Plugins.AddFromType<DocumentPlugin>();
 

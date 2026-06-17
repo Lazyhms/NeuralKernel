@@ -19,7 +19,7 @@ Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.Debug()
             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj}{NewLine}{Exception}")
-            .MinimumLevel.Verbose()
+            .MinimumLevel.Information()
             .CreateBootstrapLogger();
 
 int MaxSize = 100 * 1024 * 1024;
@@ -56,9 +56,9 @@ try
             var feature = context.Features.GetRequiredFeature<IExceptionHandlerFeature>();
 
             var logger = context.RequestServices.GetRequiredService<ILoggerFactory>();
-            logger.CreateLogger("Test").LogError(feature.Error, "TEST");
+            logger.CreateLogger("NeuralKernel").LogError(feature.Error, "NeuralKernel");
 
-            await context.Response.WriteAsJsonAsync(new { Message = "111" });
+            await context.Response.WriteAsJsonAsync(new { Message = feature.Error });
             await ValueTask.CompletedTask;
         };
     });
@@ -71,8 +71,7 @@ try
 
     var kernelBuilder = builder.Services.AddKernel()
         .AddCorePlugin()
-        .AddDocumentPlugin()
-        .AddSpeechToTextPlugin("ggml-medium-q8_0.bin");
+        .AddDocumentPlugin();
 
     foreach (var item in Directory.EnumerateDirectories("Skills"))
     {

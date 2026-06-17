@@ -1,7 +1,7 @@
-﻿namespace NeuralKernel.Plugins.Document.Text;
+namespace NeuralKernel.Plugins.Document.Text;
 
 /// <summary>
-/// �ı��ļ���ȡ��
+/// 文本文件读取器
 /// </summary>
 public sealed class TextReader : IFileReader
 {
@@ -10,7 +10,7 @@ public sealed class TextReader : IFileReader
     /// <inheritdoc />
     public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
-        using var reader = new StreamReader(data);
+        using var reader = new StreamReader(data, Encoding.UTF8, true);
         return await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
     }
 }

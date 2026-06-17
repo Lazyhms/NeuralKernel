@@ -1,4 +1,4 @@
-﻿//using NeuralKernel.StoreDefinition;
+//using NeuralKernel.StoreDefinition;
 //using NeuralKernel.Core.Chunkers;
 //using NeuralKernel.Core.DataFormats;
 //using NeuralKernel.Core.Pipeline;
@@ -93,7 +93,7 @@
 //                    });
 //                }
 //            }
-//        }).WithSummary("知识库数据摄�?).DisableAntiforgery();
+//        }).WithSummary("知识库数据摄入").DisableAntiforgery();
 
 //        return builder;
 //    }

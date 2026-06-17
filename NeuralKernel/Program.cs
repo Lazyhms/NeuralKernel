@@ -1,4 +1,4 @@
-﻿using NeuralKernel;
+using NeuralKernel;
 using NeuralKernel.Apis;
 using NeuralKernel.Core.DataFormats;
 using NeuralKernel.Core.Pipeline;
@@ -47,6 +47,12 @@ try
     }));
 
     builder.Services.AddHttpClient();
+
+    builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
 
     builder.Services.AddSwaggerGen();
     builder.Services.AddExceptionHandler(handle =>

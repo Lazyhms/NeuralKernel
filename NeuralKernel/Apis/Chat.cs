@@ -1,4 +1,4 @@
-﻿using NeuralKernel.Core.DataFormats;
+using NeuralKernel.Core.DataFormats;
 using NeuralKernel.Core.Pipeline;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -24,13 +24,13 @@ public record ChatRequest(string Question, IFormFileCollection Files)
 
 public static class Chat
 {
-    private const string SYSTEM_PROMPT = @"����һ��רҵ�����ܶԻ����֣��ش���������ࡢ׼ȷ��ʹ�ñ�׼���Ľ�����
-����Ҫ����
-1. �������˼�����̡�������������ڲ��߼�������**ȫ��ʹ������**����ֹʹ��Ӣ��˼������������˼�����������Ļش�
-2. ����пɵ��õĹ������ȵ��ù��ߣ������ѹ��߷��صĽ��Ϊ׼��
-3. ����û��ϴ����ļ��������Ȼ����ļ����ݻش𣬲�������Ϣ��
-4. ���û���ϴ��ļ���������Լ���֪ʶ�����ش����⡣
-5. ����ļ����ݲ����Իش��û����⣬����ʵ��֪��";
+    private const string SYSTEM_PROMPT = @"你是一个专业的智能对话助手，回答问题要准确、正确，使用标准的中文语言。
+核心要求：
+1. 所有思考过程、推理、分析、内部逻辑必须全部使用中文，禁止使用英文思考，用中文思考并用中文回答。
+2. 如果有可用的工具，优先使用工具，如果工具返回的结果为准。
+3. 如果用户上传了文件，先读取文件内容再回答，不要编造信息。
+4. 如果用户没上传文件，则根据自己的知识回答问题。
+5. 根据文件内容和对话回答用户问题，确保真实可靠。";
 
     public const string X_CHAT_SESSION_ID = "X-Chat-Session-Id";
 
@@ -52,7 +52,7 @@ public static class Chat
         {
             if (string.IsNullOrWhiteSpace(request.Question))
             {
-                return Results.BadRequest("�������ݲ���Ϊ��");
+                return Results.BadRequest("请求参数不能为空");
             }
 
             httpContext.Response.Headers.Append(X_CHAT_SESSION_ID, request.SessionId);
@@ -135,7 +135,7 @@ public static class Chat
             var fileContent = fileContentBuilder.ToString().Trim();
             if (!string.IsNullOrEmpty(fileContent))
             {
-                userMessageBuilder.AppendLine("\n\n���ϴ��ļ����ݡ�");
+                userMessageBuilder.AppendLine("\n\n上传的文件内容：");
                 userMessageBuilder.AppendLine(fileContent);
             }
 
@@ -145,16 +145,6 @@ public static class Chat
             {
                 chatHistory!.AddUserMessage(contentItemCollection);
             }
-
-            //var mcpClient = await McpClient.CreateAsync(new HttpClientTransport(new HttpClientTransportOptions
-            //{
-            //    Endpoint = new Uri("http://localhost:5109/mcp")
-            //}));
-            //var mcpClientTools = await mcpClient.ListToolsAsync();
-
-            //kernel.Plugins.AddFromType<OAPlugin>("OA");
-
-            //kernel.Plugins.AddFromFunctions("TEST", mcpClientTools.Select(s => s.AsKernelFunction()));
 
             return Results.Stream(async stream =>
             {
@@ -193,7 +183,7 @@ public static class Chat
                 await stream.WriteDoneAsync();
 
             }, contentType: "text/event-stream; charset=utf-8");
-        }).WithSummary("�ʴ�").DisableAntiforgery();
+        }).WithSummary("聊天").DisableAntiforgery();
 
         return builder;
     }

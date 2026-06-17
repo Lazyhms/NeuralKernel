@@ -1,4 +1,4 @@
-﻿using NeuralKernel.Core.Pipeline;
+using NeuralKernel.Core.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace NeuralKernel.Core.DataFormats.Text;
@@ -36,7 +36,7 @@ public sealed class TextDecoder(ILoggerFactory loggerFactory) : IContentDecoder
         }
 
         var result = new FileContent(MimeTypes.PlainText);
-        using var reader = new StreamReader(data);
+        using var reader = new StreamReader(data, Encoding.UTF8, true);
         var content = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
 
         result.Sections.Add(new(content.Trim(), 1));

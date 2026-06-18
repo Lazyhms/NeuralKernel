@@ -1,20 +1,19 @@
-﻿using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel;
 using System.ComponentModel;
 using System.Net;
 
 namespace NeuralKernel.Plugins.Core.Http;
 
 /// <summary>
-/// �ṩHTTP�����ܵĲ����֧��GET��POST��PUT��DELETE�ȳ���HTTP����������ͨ�� AllowedDomains �����������������Ŀ����������ǿ��ȫ�ԡ�
+/// 提供HTTP请求功能的插件，支持GET、POST、PUT、DELETE等多种HTTP方法。可通过AllowedDomains属性限制允许访问的目标地址，确保安全性。
 /// </summary>
-[KernelPlugin]
-[Description("�ṩHTTP�����ܵĲ����֧��GET��POST��PUT��DELETE�ȳ���HTTP������")]
+[Description("提供HTTP请求功能的插件，支持GET、POST、PUT、DELETE等多种HTTP方法")]
 public sealed class HttpPlugin(HttpClient client)
 {
     private HashSet<string>? _allowedDomains = [];
 
     /// <summary>
-    /// �������������������
+    /// 允许访问的域名列表
     /// </summary>
     public IEnumerable<string>? AllowedDomains
     {
@@ -23,40 +22,40 @@ public sealed class HttpPlugin(HttpClient client)
     }
 
     /// <summary>
-    /// ����GET����
+    /// 发送GET请求
     /// </summary>
-    [KernelFunction, Description("��ָ��URI����GET����")]
+    [KernelFunction, Description("向指定URI发送GET请求")]
     public Task<string> GetAsync(
-        [Description("�����URI��ַ")] string uri,
+        [Description("目标URI地址")] string uri,
         CancellationToken cancellationToken = default)
         => this.SendRequestAsync(uri, HttpMethod.Get, requestContent: null, cancellationToken);
 
     /// <summary>
-    /// ����POST����
+    /// 发送POST请求
     /// </summary>
-    [KernelFunction, Description("��ָ��URI����POST����")]
+    [KernelFunction, Description("向指定URI发送POST请求")]
     public Task<string> PostAsync(
-        [Description("�����URI��ַ")] string uri,
-        [Description("����������")] string body,
+        [Description("目标URI地址")] string uri,
+        [Description("请求体内容")] string body,
         CancellationToken cancellationToken = default) =>
         this.SendRequestAsync(uri, HttpMethod.Post, new StringContent(body), cancellationToken);
 
     /// <summary>
-    /// ����PUT����
+    /// 发送PUT请求
     /// </summary>
-    [KernelFunction, Description("��ָ��URI����PUT����")]
+    [KernelFunction, Description("向指定URI发送PUT请求")]
     public Task<string> PutAsync(
-        [Description("�����URI��ַ")] string uri,
-        [Description("����������")] string body,
+        [Description("目标URI地址")] string uri,
+        [Description("请求体内容")] string body,
         CancellationToken cancellationToken = default)
         => this.SendRequestAsync(uri, HttpMethod.Put, new StringContent(body), cancellationToken);
 
     /// <summary>
-    /// ����DELETE����
+    /// 发送DELETE请求
     /// </summary>
-    [KernelFunction, Description("��ָ��URI����DELETE����")]
+    [KernelFunction, Description("向指定URI发送DELETE请求")]
     public Task<string> DeleteAsync(
-        [Description("�����URI��ַ")] string uri,
+        [Description("目标URI地址")] string uri,
         CancellationToken cancellationToken = default)
         => this.SendRequestAsync(uri, HttpMethod.Delete, requestContent: null, cancellationToken);
 

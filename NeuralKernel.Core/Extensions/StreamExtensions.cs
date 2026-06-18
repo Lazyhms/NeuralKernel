@@ -1,9 +1,9 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.Json;
 
-#pragma warning disable IDE0130 // �����ռ����ļ��нṹ��ƥ��
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace System.IO;
-#pragma warning restore IDE0130 // �����ռ����ļ��нṹ��ƥ��
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public static class StreamExtensions
 {

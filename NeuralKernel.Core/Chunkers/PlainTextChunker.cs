@@ -1,4 +1,4 @@
-﻿using NeuralKernel.Core.Chunkers.Internals;
+﻿﻿using NeuralKernel.Core.Chunkers.Internals;
 using NeuralKernel.Core.DataFormats;
 using NeuralKernel.Core.Text;
 using NeuralKernel.Core.Tiktoken;
@@ -29,119 +29,81 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
         NotASeparator,
     }
 
-    // Do not allow chunks smaller than this size, to avoid unnecessary computation.
-    // Realistically, a chunk should be at least 1000 tokens long.
     private const int MinChunkSize = 5;
 
     private readonly ITextTokenizer _tokenizer = tokenizer ?? new CL100KTokenizer();
 
-    // Prioritized list of characters to split sentence from sentence.
     private static readonly SeparatorTrie s_explicitSeparators = new([
-        // Symbol + space
-        ". ", ".\t", ".\n", "\n\n", // note: covers also the case of multiple '.' like "....\n"
-        "? ", "?\t", "?\n", // note: covers also the case of multiple '?' and '!?' like "?????\n" and "?!?\n"
-        "! ", "!\t", "!\n", // note: covers also the case of multiple '!' and '?!' like "!!!\n" and "!?!\n"
+        ". ", ".\t", ".\n", "\n\n",
         "? ", "?\t", "?\n",
-        "? ", "?\t", "?\n",
-        "? ", "?\t", "?\n",
-        "�� ", "��\t", "��\n",
-        // Multi-char separators without space, ordered by length
+        "! ", "!\t", "!\n",
+        "？ ", "？\t", "？\n",
+        "！ ", "！\t", "！\n",
+        "。 ", "。\t", "。\n",
         "!!!!", "????", "!!!", "???", "?!?", "!?!", "!?", "?!", "!!", "??", "....", "...", "..",
-        // 1 char separators without space
-        ".", "?", "!", "?", "?", "?", "��",
-        // Chinese punctuation
-        "��", "��", "��", "��", "��"
-]);
+        ".", "?", "!", "？", "！", "。",
+        "！", "？", "。", "；", "，"
+    ]);
 
-    // Prioritized list of characters to split inside a sentence.
     private static readonly SeparatorTrie s_potentialSeparators = new([
         "; ", ";\t", ";\n", ";",
-        "} ", "}\t", "}\n", "}", // note: curly brace without spaces is up here because it's a common code ending char, more important than ')' or ']'
+        "} ", "}\t", "}\n", "}",
         ") ", ")\t", ")\n",
         "] ", "]\t", "]\n",
         ")", "]",
-        // Chinese punctuation
-        "��", "��", "��", "��", "��", "��", "��", "��", "��", "��", "��", "��"
+        "；", "】", "）", "］", "”", "’", "》", "〉", "】", "）"
     ]);
 
-    // Prioritized list of characters to split inside a sentence when other splits are not found.
     private static readonly SeparatorTrie s_weakSeparators1 = new([
-        ": ", ":", // note: \n \t make no difference with this char
-        ", ", ",", // note: \n \t make no difference with this char
-        // Chinese punctuation
-        "��", "��"
+        ": ", ":",
+        ", ", ",",
+        "：", "，"
     ]);
 
-    // Prioritized list of characters to split inside a sentence when other splits are not found.
     private static readonly SeparatorTrie s_weakSeparators2 = new([
-        "\n", // note: \n \t make no difference with this char
-        "\t", // note: \n \t make no difference with this char
-        "' ", "'", // note: \n \t make no difference with this char
-        "\" ", "\"", // note: \n \t make no difference with this char
-        " ", // note: \n \t make no difference with this char
-        // Chinese punctuation
-        "��", "��", "��", "��"
+        "\n",
+        "\t",
+        "' ", "'",
+        "\" ", "\"",
+        " ",
+        "、", "·", "·", "·"
     ]);
 
-    // Prioritized list of characters to split inside a sentence when other splits are not found.
     private static readonly SeparatorTrie s_weakSeparators3 = new([
-        "_", // note: \n \t make no difference with this char
-        "-", // note: \n \t make no difference with this char
-        "|", // note: \n \t make no difference with this char
-        "@", // note: \n \t make no difference with this char
-        "=", // note: \n \t make no difference with this char
-        // Chinese punctuation
-        "��", "��", "��"
+        "_",
+        "-",
+        "|",
+        "@",
+        "=",
+        "—", "…", "·"
     ]);
 
-    /// <summary>
-    /// Split plain text into chunks of text.
-    /// </summary>
-    /// <param name="text">Text to split</param>
-    /// <param name="maxTokensPerChunk">Maximum number of tokens per chunk (must be > 0)</param>
-    /// <returns>List of chunks.</returns>
     public List<string> Split(string text, int maxTokensPerChunk)
     {
         return Split(text, new PlainTextChunkerOptions { MaxTokensPerChunk = maxTokensPerChunk });
     }
 
-    /// <summary>
-    /// Split plain text into blocks.
-    /// Note:
-    /// - \r\n characters are replaced with \n
-    /// - \r characters are replaced with \n
-    /// - \t character is not replaced
-    /// - Chunks cannot be smaller than [MinChunkSize] tokens (header excluded)
-    /// </summary>
-    /// <param name="text">Text to split</param>
-    /// <param name="options">How to handle input and how to generate chunks</param>
-    /// <returns>List of chunks.</returns>
     public List<string> Split(string text, PlainTextChunkerOptions options)
     {
         ArgumentNullException.ThrowIfNull(text);
         ArgumentNullException.ThrowIfNull(options);
 
-        // Clean up text. Note: LLMs don't use \r char
         text = text.NormalizeNewlines(true);
 
-        // Calculate chunk size leaving room for the optional chunk header
         int maxChunk1Size = options.MaxTokensPerChunk - TokenCount(options.ChunkHeader);
         int maxChunkNSize = options.MaxTokensPerChunk - TokenCount(options.ChunkHeader) - options.Overlap;
         maxChunk1Size = Math.Max(MinChunkSize, maxChunk1Size);
         maxChunkNSize = Math.Max(MinChunkSize, maxChunkNSize);
 
-        // Chunk using recursive logic, starting with explicit separators and moving to weaker ones if needed
         bool firstChunkDone = false;
         var chunks = RecursiveSplit(text, maxChunk1Size, maxChunkNSize, SeparatorTypes.ExplicitSeparator, ref firstChunkDone);
 
-        // Add overlapping tokens. Note: won't copy more than maxChunkSize (no exceptions thrown)
         if (options.Overlap > 0 && chunks.Count > 1)
         {
             var newChunks = new List<string> { chunks[0] };
 
             for (int index = 1; index < chunks.Count; index++)
             {
-                // Tokenize the previous chunk, and copy last N tokens into the next chunk
                 IReadOnlyList<string> previousChunkTokens = _tokenizer.GetTokens(chunks[index - 1]);
                 IEnumerable<string> overlapTokens = previousChunkTokens.Skip(previousChunkTokens.Count - options.Overlap);
                 newChunks.Add($"{string.Join("", overlapTokens)}{chunks[index]}");
@@ -150,7 +112,6 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
             chunks = newChunks;
         }
 
-        // Add header to each chunk
         if (!string.IsNullOrEmpty(options.ChunkHeader))
         {
             chunks = [.. chunks.Select(x => $"{options.ChunkHeader}{x}")];
@@ -174,16 +135,6 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
         _ => throw new ArgumentOutOfRangeException($"{nameof(SeparatorTypes.NotASeparator).ToLower()} doesn't have a next separator type."),
     };
 
-    /// <summary>
-    /// Greedy algorithm aggregating fragments into chunks separated by a specific separator type.
-    /// If any of the generated chunks is too long, those are split recursively using weaker separators.
-    /// </summary>
-    /// <param name="text">Text to split</param>
-    /// <param name="maxChunk1Size">Max size of first chunk</param>
-    /// <param name="maxChunkNSize">Max size of each chunk</param>
-    /// <param name="separatorType">Type of separator to detect</param>
-    /// <param name="firstChunkDone">Used to know if we're processing the first chunk, e.g. for overlapping</param>
-    /// <returns>List of strings</returns>
     internal List<string> RecursiveSplit(
         string text,
         int maxChunk1Size,
@@ -194,16 +145,11 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
 #if DEBUGRECURSION
         Console.WriteLine($"RecursiveSplit: {text.Length} chars; maxChunk1Size: {maxChunk1Size}; maxChunkNSize: {maxChunkNSize}; separatorType: {separatorType:G}");
 #endif
-        // Edge case: empty text
         if (string.IsNullOrEmpty(text)) { return []; }
 
-        // Edge case: text is already short enough
         var maxChunkSize = firstChunkDone ? maxChunkNSize : maxChunk1Size;
         if (TokenCount(text) <= maxChunkSize) { return [text]; }
 
-        // Important: 'SplitToFragments' splits content in words and delimiters, using logic specific to plain text.
-        //            These are different from LLM tokens, which are based on the tokenizer used to train the model.
-        // Recursive logic exit clause: when separator type is NotASeparator, count each char as a fragment
         List<Chunk> fragments = separatorType switch
         {
             SeparatorTypes.ExplicitSeparator => SplitToFragments(text, s_explicitSeparators),
@@ -233,29 +179,14 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
 
         foreach (var fragment in fragments)
         {
-            // Note: fragments != LLM tokens. One fragment can contain multiple tokens.
             chunk.NextSentence.Append(fragment.Content);
 
-            // Keep adding until a separator is found
             if (!fragment.IsSeparator) { continue; }
 
             string nextSentence = chunk.NextSentence.ToString();
             int nextSentenceSize = TokenCount(nextSentence);
             maxChunkSize = firstChunkDone ? maxChunkNSize : maxChunk1Size;
 
-            // Detect current state
-            // 1:
-            // - the current chunk is still empty
-            // - the next sentence is complete and is NOT too long
-            // 2:
-            // - the current chunk is still empty
-            // - the next sentence is complete and is TOO LONG
-            // 3:
-            // - the current chunk is NOT empty
-            // - the next sentence is complete and is NOT too long
-            // 4:
-            // - the current chunk is NOT empty
-            // - the next sentence is complete and is TOO LONG
             int state;
             if (chunk.FullContent.Length == 0)
             {
@@ -271,15 +202,11 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state).ToLower());
 
-                // - the current chunk is still empty
-                // - the next sentence is complete and is NOT too long
                 case 1:
                     chunk.FullContent.Append(nextSentence);
                     chunk.NextSentence.Clear();
                     continue;
 
-                // - the current chunk is still empty
-                // - the next sentence is complete and is TOO LONG
                 case 2:
                     {
                         var moreChunks = RecursiveSplit(nextSentence, maxChunk1Size, maxChunkNSize, NextSeparatorType(separatorType), ref firstChunkDone);
@@ -288,19 +215,15 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
                         continue;
                     }
 
-                // - the current chunk is NOT empty
-                // - the next sentence is complete and is NOT too long
                 case 3:
                     {
                         var chunkPlusSentence = $"{chunk.FullContent}{chunk.NextSentence}";
                         if (TokenCount(chunkPlusSentence) <= maxChunkSize)
                         {
-                            // Move next sentence to current chunk
                             chunk.FullContent.Append(chunk.NextSentence);
                         }
                         else
                         {
-                            // Complete the current chunk and start a new one
                             AddChunk(chunks, chunk.FullContent.ToString(), ref firstChunkDone);
                             chunk.FullContent.Clear().Append(chunk.NextSentence);
                         }
@@ -309,8 +232,6 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
                         continue;
                     }
 
-                // - the current chunk is NOT empty
-                // - the next sentence is complete and is TOO LONG
                 case 4:
                     {
                         AddChunk(chunks, chunk.FullContent, ref firstChunkDone);
@@ -323,7 +244,6 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
             }
         }
 
-        // If there's something left in the buffers
         string fullSentenceLeft = chunk.FullContent.ToString();
         string nextSentenceLeft = chunk.NextSentence.ToString();
         maxChunkSize = firstChunkDone ? maxChunkNSize : maxChunk1Size;
@@ -359,18 +279,13 @@ public class PlainTextChunker(ITextTokenizer? tokenizer = null)
         return chunks;
     }
 
-    /// <summary>
-    /// Split text into fragments using a list of separators.
-    /// </summary>
     internal static List<Chunk> SplitToFragments(string text, SeparatorTrie? separators)
     {
-        // Split all chars
         if (separators == null)
         {
             return [.. text.Select(x => new Chunk(x, -1) { IsSeparator = true })];
         }
 
-        // If the text is empty or there are no separators
         if (string.IsNullOrEmpty(text) || separators.Length == 0) { return []; }
 
         var fragments = new List<Chunk>();

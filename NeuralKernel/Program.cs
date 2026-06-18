@@ -84,8 +84,6 @@ try
         kernelBuilder.Plugins.AddFromPromptDirectory(item);
     }
 
-    kernelBuilder.Plugins.AddFromPluginDirectory();
-
     builder.Services.Configure<ModelOptions>(builder.Configuration.GetSection("Ollama"));
 
     builder.Services.AddSingleton<IOllamaApiClient>(new OllamaApiClient(new HttpClient

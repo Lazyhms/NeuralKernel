@@ -5,10 +5,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	
-	<ItemGroup>
-		<ProjectReference Include="..\NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Markdig" Version="1.3.1" />

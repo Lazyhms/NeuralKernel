@@ -21,7 +21,7 @@
 //    private static readonly MarkDownChunker _markDownChunker = new(new CL100KTokenizer());
 
 //    /// <summary>
-//    /// 知识库数据摄�?
+//    /// 知识库数据摄入
 //    /// </summary>
 //    public static RouteGroupBuilder MapRagIngest(this RouteGroupBuilder builder)
 //    {

@@ -6,7 +6,6 @@ namespace NeuralKernel.Plugins.Core.Time;
 /// <summary>
 /// 时间插件提供一系列用于获取当前时间和日期的函数。
 /// </summary>
-[KernelPlugin]
 [Description("时间插件提供一系列用于获取当前时间和日期的函数。")]
 public sealed class TimePlugin
 {

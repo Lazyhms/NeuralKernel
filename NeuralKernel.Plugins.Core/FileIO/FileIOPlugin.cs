@@ -6,7 +6,6 @@ namespace NeuralKernel.Plugins.Core.FileIO;
 /// <summary>
 /// 文件系统插件，提供文件读取、写入、目录查询等功能。
 /// </summary>
-[KernelPlugin]
 [Description("文件系统插件，提供文件读取、写入、目录查询等功能。")]
 public sealed class FileIOPlugin
 {

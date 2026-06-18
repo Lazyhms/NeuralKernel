@@ -1,6 +1,6 @@
-﻿#pragma warning disable IDE0130 // �����ռ����ļ��нṹ��ƥ��
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace Microsoft.SemanticKernel;
-#pragma warning restore IDE0130 // �����ռ����ļ��нṹ��ƥ��
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 /// <summary>
 /// 

@@ -6,6 +6,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Ollama;
 using NeuralKernel.Plugins.Document;
 using OllamaSharp.Models;
+using OllamaSharp.Models.Chat;
 using System.Text;
 
 namespace NeuralKernel.Apis;
@@ -34,8 +35,11 @@ public static class DocumentAgent
             IMemoryCache memoryCache,
             [FromForm] DocumentAgentRequest request,
             IChatCompletionService chatCompletion,
-            IOptionsSnapshot<ModelOptions> optionsSnapshot) =>
+            IOptionsSnapshot<ModelOptions> optionsSnapshot,
+            ILoggerFactory loggerFactory) =>
         {
+            var logger = loggerFactory.CreateLogger(nameof(DocumentAgent));
+
             var userMessage = request.Question ?? string.Empty;
             if (string.IsNullOrWhiteSpace(userMessage) && request.Files.Count == 0)
             {
@@ -86,9 +90,28 @@ public static class DocumentAgent
                 {
                     Temperature = 0.7f,
                     ModelId = optionsSnapshot.Value.Chat,
-                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                    FunctionChoiceBehavior = FunctionChoiceBehavior.Auto(),
                 }.AddOllamaOption(OllamaOption.Think, true), kernel))
                 {
+                    if (item.InnerContent is ChatResponseStream responseStream)
+                    {
+                        if (!string.IsNullOrWhiteSpace(responseStream.Message.Thinking))
+                        {
+                            if (logger.IsEnabled(LogLevel.Information))
+                            {
+                                logger.LogInformation("Thinking:{Thinking}", responseStream.Message.Thinking);
+                            }
+                        }
+
+                        if (responseStream.Message.ToolCalls != null && responseStream.Message.ToolCalls.Any())
+                        {
+                            if (logger.IsEnabled(LogLevel.Information))
+                            {
+                                logger.LogInformation("Thinking:{Thinking}", string.Join(",", responseStream.Message.ToolCalls.Select(s => s.Function.Name)));
+                            }
+                        }
+                    }
+
                     if (!string.IsNullOrWhiteSpace(item.Content))
                     {
                         fullAnswer.Append(item.Content);

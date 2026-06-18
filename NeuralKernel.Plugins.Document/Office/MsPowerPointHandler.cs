@@ -4,13 +4,18 @@ using System.Text;
 
 namespace NeuralKernel.Plugins.Document.Office;
 
-public sealed class MsPowerPointReader : IFileReader
+/// <summary>
+/// Microsoft PowerPoint 文件处理器（只读）
+/// </summary>
+public sealed class MsPowerPointHandler : IFileHandler
 {
     public IReadOnlyList<string> MimeType { get; } =
         [
             "application/vnd.ms-powerpoint",
             "application/vnd.openxmlformats-officedocument.presentationml.presentation"
         ];
+
+    public string? DefaultExtension { get; } = null;
 
     public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
@@ -52,5 +57,10 @@ public sealed class MsPowerPointReader : IFileReader
         }
 
         return await Task.FromResult(readerContent.ToString());
+    }
+
+    public Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException("PowerPoint 写入功能暂未实现");
     }
 }

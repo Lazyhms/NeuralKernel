@@ -7,10 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.77.0" />
 		<PackageReference Include="Whisper.net" Version="1.9.1" />
 		<PackageReference Include="Whisper.net.Runtime" Version="1.9.1" />

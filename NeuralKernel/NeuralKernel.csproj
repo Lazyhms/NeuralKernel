@@ -33,7 +33,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\NeuralKernel.Core\NeuralKernel.Core.csproj" />
-	  <ProjectReference Include="..\NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj" />
 	  <ProjectReference Include="..\NeuralKernel.Plugins.SpeechToText\NeuralKernel.Plugins.SpeechToText.csproj" />
 	  <ProjectReference Include="..\NeuralKernel.Plugins.Document\NeuralKernel.Plugins.Document.csproj" />
 	  <ProjectReference Include="..\NeuralKernel.Plugins.Core\NeuralKernel.Plugins.Core.csproj" />

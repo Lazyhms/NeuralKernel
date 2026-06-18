@@ -9,8 +9,4 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.77.0" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj" />
-	</ItemGroup>
 </Project>

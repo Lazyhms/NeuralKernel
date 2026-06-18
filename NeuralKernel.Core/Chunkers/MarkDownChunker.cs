@@ -1,4 +1,4 @@
-﻿#define DEBUGCHUNKS__
+#define DEBUGCHUNKS__
 #define DEBUGFRAGMENTS__
 #define DEBUGRECURSION__
 
@@ -91,14 +91,13 @@ public class MarkDownChunker(ITextTokenizer? tokenizer = null)
         ". ", ".\t", ".\n",
         "? ", "?\t", "?\n",
         "! ", "!\t", "!\n",
-        "? ", "?\t", "?\n",
-        "? ", "?\t", "?\n",
-        "? ", "?\t", "?\n",
-        "�� ", "��\t", "��\n",
+        "？ ", "？\t", "？\n",
+        "！ ", "！\t", "！\n",
+        "。 ", "。\t", "。\n",
         // Multi-char separators without space, ordered by length
         "!!!!", "????", "!!!", "???", "?!?", "!?!", "!?", "?!", "!!", "??", "....", "...", "..",
         // 1 char separators without space
-        ".", "?", "!", "?", "?", "?", "��",
+        ".", "?", "!", "？", "！", "。",
     ]);
 
     // Prioritized list of characters to split inside a sentence when other splits are not found.

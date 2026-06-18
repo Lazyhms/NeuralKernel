@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Core", "Neural
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Core", "NeuralKernel.Plugins.Core\NeuralKernel.Plugins.Core.csproj", "{00751510-0AAC-4F17-A5D2-FEB340E7C93A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Abstractions", "NeuralKernel.Plugins.Abstractions\NeuralKernel.Plugins.Abstractions.csproj", "{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.Document", "NeuralKernel.Plugins.Document\NeuralKernel.Plugins.Document.csproj", "{DDBD42CF-5287-4C59-B293-FC146C5DE02C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralKernel.Plugins.SpeechToText", "NeuralKernel.Plugins.SpeechToText\NeuralKernel.Plugins.SpeechToText.csproj", "{8963509B-11D6-4543-8738-0A6FDEAFFF86}"
@@ -38,10 +36,6 @@ Global
 		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00751510-0AAC-4F17-A5D2-FEB340E7C93A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45E2E6B8-A645-4B5B-AB3A-CA77AD6D8400}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDBD42CF-5287-4C59-B293-FC146C5DE02C}.Release|Any CPU.ActiveCfg = Release|Any CPU

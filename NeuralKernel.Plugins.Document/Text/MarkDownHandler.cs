@@ -1,21 +1,23 @@
+﻿using Markdig;
 using System.Text;
 
 namespace NeuralKernel.Plugins.Document.Text;
 
 /// <summary>
-/// Markdown 文件写入器（按 UTF-8 原样写入）。
+/// Markdown 文件处理器
 /// </summary>
-public sealed class MarkDownWriter : IFileWriter
+public sealed class MarkDownHandler : IFileHandler
 {
     public IReadOnlyList<string> MimeType { get; } = ["text/markdown"];
 
-    public string DefaultExtension { get; } = "md";
+    public string? DefaultExtension { get; } = "md";
 
-    public string FormatName { get; } = "Markdown";
-
-    public string FormatDescription { get; } = "技术文档、README、报告";
-
-    public string ContentGuide { get; } = "- 使用标准 Markdown 语法：# 一级标题、## 二级标题、### 三级标题、**粗体**、*斜体*、- 无序列表、1. 有序列表、| 表头 |（表格）、> 引用文本";
+    public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
+    {
+        using var reader = new StreamReader(data, Encoding.UTF8, true);
+        var readerContent = await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+        return Markdown.ToPlainText(readerContent);
+    }
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
     {

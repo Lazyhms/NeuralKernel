@@ -5,16 +5,14 @@ using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 namespace NeuralKernel.Plugins.Document.Pdf;
 
 /// <summary>
-/// PDF 文件读取器
+/// PDF 文件处理器（只读）
 /// </summary>
-public class PdfReader : IFileReader
+public class PdfHandler : IFileHandler
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public IReadOnlyList<string> MimeType { get; } = ["application/pdf"];
 
-    /// <inheritdoc />
+    public string? DefaultExtension { get; } = null;
+
     public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
         using var pdfDocument = PdfDocument.Open(data);
@@ -27,5 +25,10 @@ public class PdfReader : IFileReader
         }
 
         return await Task.FromResult(readerContent.ToString());
+    }
+
+    public Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
+    {
+        throw new NotSupportedException("PDF 写入功能暂未实现");
     }
 }

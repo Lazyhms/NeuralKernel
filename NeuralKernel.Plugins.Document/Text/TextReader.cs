@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace NeuralKernel.Plugins.Document.Text;
 
 /// <summary>

@@ -1,17 +1,13 @@
-using NeuralKernel.Core.DataFormats;
-using NeuralKernel.Core.Pipeline;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Ollama;
+using NeuralKernel.Core.DataFormats;
+using NeuralKernel.Core.Pipeline;
 using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
-using OpenCvSharp;
-using Sdcb.PaddleInference;
-using Sdcb.PaddleOCR;
-using Sdcb.PaddleOCR.Models.Local;
 using System.Text;
 using UglyToad.PdfPig;
 
@@ -79,40 +75,6 @@ public static class Chat
                     contentItemCollection.Add(new ImageContent(memory, file.ContentType));
 
                     continue;
-                }
-
-                if (file.ContentType == MimeTypes.Pdf)
-                {
-                    using var pdfStream = file.OpenReadStream();
-                    var p = PdfDocument.Open(pdfStream);
-                    foreach (var item in p.GetPages())
-                    {
-                        foreach (var item1 in item.GetImages())
-                        {
-                            if (!item1.TryGetPng(out var bytes))
-                            {
-                                if (!item1.TryGetBytesAsMemory(out var m))
-                                {
-                                    m = item1.RawMemory;
-                                }
-
-                                bytes = m.ToArray();
-                            }
-
-                            using var dd = Mat.FromImageData(bytes, ImreadModes.Grayscale);
-
-                            using Mat denoised = new();
-                            Cv2.GaussianBlur(dd, denoised, new Size(3, 3), 0);
-
-                            using PaddleOcrAll ocr = new(LocalFullModels.ChineseV4, PaddleDevice.Gpu())
-                            {
-                                AllowRotateDetection = true,
-                                Enable180Classification = true,
-                            };
-                            var r = ocr.Run(denoised);
-                            fileContentBuilder.AppendLine(r.Text);
-                        }
-                    }
                 }
 
                 if (mimeTypeDetection.TryGetFileType(file.ContentType, out var mimeType) && !string.IsNullOrWhiteSpace(mimeType))

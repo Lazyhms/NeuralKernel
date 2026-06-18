@@ -25,8 +25,8 @@ public sealed class MsExcelWriter : IFileWriter
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (content is null) throw new ArgumentNullException(nameof(content));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(content);
 
         using var workbook = new XLWorkbook();
         var worksheet = workbook.Worksheets.Add("Sheet1");

@@ -1,4 +1,5 @@
 using Markdig;
+using System.Text;
 
 namespace NeuralKernel.Plugins.Document.Text;
 

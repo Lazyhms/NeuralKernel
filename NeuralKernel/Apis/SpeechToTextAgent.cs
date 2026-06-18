@@ -93,7 +93,7 @@ public static class SpeechToTextAgent
                 return Results.BadRequest("请上传音频文件或输入问题");
             }
 
-            chatHistory.AddUserMessage(finalUserMessage);
+            chatHistory!.AddUserMessage(finalUserMessage);
 
             return Results.Stream(async stream =>
             {

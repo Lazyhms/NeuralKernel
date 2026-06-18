@@ -20,8 +20,8 @@ public sealed class HtmlWriter : IFileWriter
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (content is null) throw new ArgumentNullException(nameof(content));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(content);
 
         var finalContent = content;
         if (!content.Contains("<html", StringComparison.OrdinalIgnoreCase))

@@ -5,7 +5,7 @@ using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 namespace NeuralKernel.Plugins.Document.Pdf;
 
 /// <summary>
-/// PDF 文件读取�?
+/// PDF 文件读取器
 /// </summary>
 public class PdfReader : IFileReader
 {

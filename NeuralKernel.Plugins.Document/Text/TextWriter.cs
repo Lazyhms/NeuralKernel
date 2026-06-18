@@ -19,10 +19,9 @@ public sealed class TextWriter : IFileWriter
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
     {
-        if (target is null) throw new ArgumentNullException(nameof(target));
-        if (content is null) throw new ArgumentNullException(nameof(content));
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(content);
 
-        var bytes = Encoding.UTF8.GetBytes(content);
-        await target.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
+        await target.WriteAsync(Encoding.UTF8.GetBytes(content), cancellationToken).ConfigureAwait(false);
     }
 }

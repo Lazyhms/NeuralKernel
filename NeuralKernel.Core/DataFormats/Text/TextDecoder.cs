@@ -1,5 +1,6 @@
 using NeuralKernel.Core.Pipeline;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace NeuralKernel.Core.DataFormats.Text;
 

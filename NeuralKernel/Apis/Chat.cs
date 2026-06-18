@@ -6,6 +6,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Ollama;
 using NeuralKernel.Core.DataFormats;
 using NeuralKernel.Core.Pipeline;
+using NeuralKernel.Plugins.Core.FileMime;
 using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
 using System.Text;

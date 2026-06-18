@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Ollama;
+using NeuralKernel.Plugins.Core.FileMime;
 using NeuralKernel.Plugins.Document;
 using OllamaSharp.Models;
 using OllamaSharp.Models.Chat;
@@ -19,7 +20,7 @@ public record DocumentAgentRequest(IFormFileCollection Files)
 
 public static class DocumentAgent
 {
-    private const string SYSTEM_PROMPT = @"你是一个专业的文档处理智能助手。【核心规则】1. 所有思考过程、推理、分析、内部逻辑必须全部使用中文。2. 用户上传文档时根据需求读取需要的文档内容。3. 如果用户同时上传了文档和问题，先读取相关文档内容，然后根据内容回答问题或生成文档。4. 如果没有问题，只返回文档提取结果即可。5. 如果没有上传文档，直接回答用户问题或生成文档。6. 回答时请保持中文，简洁明了。";
+    private const string SYSTEM_PROMPT = @"你是一个专业的文档处理智能助手。【核心规则】1. 所有思考过程、推理、分析、内部逻辑必须全部使用中文。2. 用户上传文档时根据需求读取需要的文档内容。3. 如果用户同时上传了文档和问题，先读取相关文档内容，然后根据内容回答问题或生成文档。4. 如果没有问题，只返回文档提取结果即可。5. 如果没有上传文档，直接回答用户问题或生成文档。6. 回答时请保持中文，简洁明了。【文档生成格式要求】生成文档内容时，必须使用 Markdown 格式：使用 # 表示一级标题，## 表示二级标题，### 表示三级标题；使用 - 或 * 表示无序列表；使用 1. 2. 3. 表示有序列表；使用 **加粗文本** 和 *斜体文本* 表示文字样式；使用 | 分隔表格列；使用 ``` 包裹代码块。生成的文档内容将直接用于创建 Word 等格式的文档文件。";
 
     public const string X_CHAT_SESSION_ID = "X-Document-Session-Id";
 
@@ -85,6 +86,10 @@ public static class DocumentAgent
                 chatHistory!.AddUserMessage(userMessage);
 
                 var fullAnswer = new StringBuilder();
+
+                kernel.Plugins.Clear();
+                kernel.Plugins.AddFromType<FileMimePlugin>();
+                kernel.Plugins.Add(kernel.CreatePluginFromType<DocumentPlugin>());
 
                 await foreach (var item in chatCompletion.GetStreamingChatMessageContentsAsync(chatHistory, new OllamaPromptExecutionSettings
                 {

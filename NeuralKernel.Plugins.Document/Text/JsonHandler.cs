@@ -5,15 +5,16 @@ namespace NeuralKernel.Plugins.Document.Text;
 /// <summary>
 /// JSON 文件处理器（只写）
 /// </summary>
-public sealed class JsonHandler : IFileHandler
+public sealed class JsonHandler : IDocumentHandler
 {
     public IReadOnlyList<string> MimeType { get; } = ["application/json"];
 
-    public string? DefaultExtension { get; } = "json";
+    public string DefaultExtension { get; } = "json";
 
-    public Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
+    public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
-        throw new NotSupportedException("JSON 读取功能暂未实现");
+        using var reader = new StreamReader(data, Encoding.UTF8, true);
+        return await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

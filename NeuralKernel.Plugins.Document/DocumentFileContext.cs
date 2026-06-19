@@ -10,9 +10,9 @@ public sealed class DocumentFileInfo
 
 public static class DocumentFileContext
 {
-    private static readonly AsyncLocal<List<DocumentFileInfo>?> _files = new();
+    private static readonly AsyncLocal<IReadOnlyList<DocumentFileInfo>?> _files = new();
 
-    public static List<DocumentFileInfo>? Current
+    public static IReadOnlyList<DocumentFileInfo>? Current
     {
         get => _files.Value;
         set => _files.Value = value;

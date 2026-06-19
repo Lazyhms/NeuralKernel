@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NeuralKernel.Plugins.Document.Office;
 
-public sealed class MsExcelHandler : IFileHandler
+public sealed class MsExcelHandler : IDocumentHandler
 {
     public IReadOnlyList<string> MimeType { get; } =
         [
@@ -12,15 +12,17 @@ public sealed class MsExcelHandler : IFileHandler
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         ];
 
-    public string? DefaultExtension { get; } = "xlsx";
+    public string DefaultExtension { get; } = "xlsx";
 
-    public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
+    public Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
         var readerContent = new StringBuilder();
         using var workbook = new XLWorkbook(data);
 
         foreach (var worksheet in workbook.Worksheets)
         {
+            readerContent.AppendLine($"【工作表: {worksheet.Name}】");
+
             var rowsUsed = worksheet.RangeUsed()?.RowsUsed();
             if (rowsUsed is null) { continue; }
 
@@ -28,8 +30,10 @@ public sealed class MsExcelHandler : IFileHandler
             {
                 if (row == null) { continue; }
 
-                foreach (var cell in row.Cells())
+                var cells = row.Cells().ToList();
+                for (var i = 0; i < cells.Count; i++)
                 {
+                    var cell = cells[i];
                     if (cell == null || cell.Value.IsBlank)
                     {
                         readerContent.Append(string.Empty);
@@ -63,13 +67,18 @@ public sealed class MsExcelHandler : IFileHandler
                     {
                         readerContent.Append(cell.Value.GetError().ToString().Replace("\"", "\"\"", StringComparison.Ordinal));
                     }
+
+                    if (i < cells.Count - 1)
+                    {
+                        readerContent.Append('\t');
+                    }
                 }
 
                 readerContent.AppendLine();
             }
         }
 
-        return await Task.FromResult(readerContent.ToString());
+        return Task.FromResult(readerContent.ToString());
     }
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

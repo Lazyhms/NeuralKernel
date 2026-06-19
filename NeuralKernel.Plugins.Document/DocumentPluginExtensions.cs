@@ -10,14 +10,14 @@ public static class DocumentPluginExtensions
 {
     public static IKernelBuilder AddDocumentPlugin(this IKernelBuilder builder)
     {
-        builder.Services.AddSingleton<IFileHandler, PdfHandler>();
-        builder.Services.AddSingleton<IFileHandler, HtmlHandler>();
-        builder.Services.AddSingleton<IFileHandler, MsWordHandler>();
-        builder.Services.AddSingleton<IFileHandler, MsExcelHandler>();
-        builder.Services.AddSingleton<IFileHandler, Text.TextHandler>();
-        builder.Services.AddSingleton<IFileHandler, Text.JsonHandler>();
-        builder.Services.AddSingleton<IFileHandler, MsPowerPointHandler>();
-        builder.Services.AddSingleton<IFileHandler, Text.MarkDownHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, PdfHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, HtmlHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, MsWordHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, MsExcelHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, Text.TextHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, Text.JsonHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, MsPowerPointHandler>();
+        builder.Services.AddSingleton<IDocumentHandler, Text.MarkDownHandler>();
 
         builder.Plugins.AddFromType<DocumentPlugin>("Document");
 

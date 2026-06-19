@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using System.Text;
 
@@ -7,7 +7,7 @@ namespace NeuralKernel.Plugins.Document.Office;
 /// <summary>
 /// Microsoft PowerPoint 文件处理器（只读）
 /// </summary>
-public sealed class MsPowerPointHandler : IFileHandler
+public sealed class MsPowerPointHandler : IDocumentHandler
 {
     public IReadOnlyList<string> MimeType { get; } =
         [
@@ -15,9 +15,9 @@ public sealed class MsPowerPointHandler : IFileHandler
             "application/vnd.openxmlformats-officedocument.presentationml.presentation"
         ];
 
-    public string? DefaultExtension { get; } = null;
+    public string DefaultExtension { get; } = "pptx";
 
-    public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
+    public Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
         var readerContent = new StringBuilder();
         using var presentationDocument = PresentationDocument.Open(data, false);
@@ -56,7 +56,7 @@ public sealed class MsPowerPointHandler : IFileHandler
             }
         }
 
-        return await Task.FromResult(readerContent.ToString());
+        return Task.FromResult(readerContent.ToString());
     }
 
     public Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

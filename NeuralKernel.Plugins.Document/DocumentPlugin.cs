@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿﻿using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using System.ComponentModel;
 
 namespace NeuralKernel.Plugins.Document;
 
-public sealed class DocumentPlugin(IEnumerable<IFileHandler> handlers, ILogger<DocumentPlugin> logger)
+public sealed class DocumentPlugin(IEnumerable<IDocumentHandler> handlers, ILogger<DocumentPlugin> logger)
 {
     [KernelFunction, Description("列出当前请求中上传的所有文档文件，返回文件名、类型和大小")]
     public static string ListDocuments()

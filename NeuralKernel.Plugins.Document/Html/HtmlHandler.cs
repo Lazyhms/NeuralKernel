@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+using HtmlAgilityPack;
+using Markdig;
 using System.Text;
 
 namespace NeuralKernel.Plugins.Document.Html;
@@ -6,16 +7,14 @@ namespace NeuralKernel.Plugins.Document.Html;
 /// <summary>
 /// HTML 文件处理器
 /// </summary>
-public sealed class HtmlHandler : IFileHandler
+public sealed class HtmlHandler : IDocumentHandler
 {
-    public const string Html = "text/html";
-    public const string XHTML = "application/xhtml+xml";
-    public const string XML = "application/xml";
-    public const string XML2 = "text/xml";
+    private static readonly MarkdownPipeline s_pipeline = 
+        new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
-    public IReadOnlyList<string> MimeType { get; } = [Html, XHTML];
+    public IReadOnlyList<string> MimeType { get; } = ["text/html", "application/xhtml+xml"];
 
-    public string? DefaultExtension { get; } = "html";
+    public string DefaultExtension { get; } = "html";
 
     public async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
     {
@@ -29,15 +28,7 @@ public sealed class HtmlHandler : IFileHandler
         ArgumentNullException.ThrowIfNull(target);
         ArgumentNullException.ThrowIfNull(content);
 
-        var finalContent = content;
-        if (!content.Contains("<html", StringComparison.OrdinalIgnoreCase))
-        {
-            finalContent = "<!DOCTYPE html>\n<html>\n<head><meta charset=\"utf-8\"></head>\n<body>\n"
-                + content
-                + "\n</body>\n</html>";
-        }
-
-        var bytes = Encoding.UTF8.GetBytes(finalContent);
+        var bytes = Encoding.UTF8.GetBytes(Markdown.ToHtml(content, s_pipeline));
         await target.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
     }
 }

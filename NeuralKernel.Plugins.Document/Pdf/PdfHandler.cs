@@ -21,7 +21,7 @@ public class PdfHandler : IDocumentHandler
         var readerContent = new StringBuilder();
         foreach (var page in pdfDocument.GetPages().Where(w => w is not null))
         {
-            readerContent.AppendLine(ContentOrderTextExtractor.GetText(page));
+            readerContent.AppendLine(ContentOrderTextExtractor.GetText(page).NormalizeNewlines(false));
         }
 
         return await Task.FromResult(readerContent.ToString());

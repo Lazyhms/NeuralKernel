@@ -22,12 +22,12 @@ public interface IDocumentHandler
         return await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
+    async Task WriteAsync(Stream data, string content, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(content);
 
-        var bytes = Encoding.UTF8.GetBytes(content);
-        await target.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
+        using var writer = new StreamWriter(data, Encoding.UTF8, leaveOpen: true);
+        await writer.WriteAsync(content).ConfigureAwait(false);
     }
 }

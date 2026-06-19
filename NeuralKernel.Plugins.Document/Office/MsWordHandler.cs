@@ -36,10 +36,10 @@ public sealed class MsWordHandler : IDocumentHandler
         var readerContent = new StringBuilder();
         foreach (Paragraph p in paragraphs)
         {
-            readerContent.AppendLine(p.InnerText);
+            readerContent.AppendLineNix(p.InnerText);
         }
 
-        return Task.FromResult(readerContent.ToString());
+        return Task.FromResult(readerContent.ToString().NormalizeNewlines(false));
     }
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

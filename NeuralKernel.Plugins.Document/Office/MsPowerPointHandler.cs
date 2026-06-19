@@ -51,12 +51,12 @@ public sealed class MsPowerPointHandler : IDocumentHandler
                     if (currentSlideContent.Length < 1) { continue; }
 
                     readerContent.Append(currentSlideContent);
-                    readerContent.AppendLine(string.Empty);
-                }
+                    readerContent.AppendLineNix();
+                }       
             }
         }
 
-        return Task.FromResult(readerContent.ToString());
+        return Task.FromResult(readerContent.ToString().NormalizeNewlines(false));
     }
 
     public Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

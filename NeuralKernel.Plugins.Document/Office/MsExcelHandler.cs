@@ -74,11 +74,13 @@ public sealed class MsExcelHandler : IDocumentHandler
                     }
                 }
 
-                readerContent.AppendLine();
+                readerContent.AppendLineNix();
             }
+
+            readerContent.AppendLineNix();
         }
 
-        return Task.FromResult(readerContent.ToString());
+        return Task.FromResult(readerContent.ToString().NormalizeNewlines(false));
     }
 
     public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)

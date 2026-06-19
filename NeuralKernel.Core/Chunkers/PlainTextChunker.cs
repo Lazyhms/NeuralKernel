@@ -1,6 +1,5 @@
-﻿﻿using NeuralKernel.Core.Chunkers.Internals;
+﻿using NeuralKernel.Core.Chunkers.Internals;
 using NeuralKernel.Core.DataFormats;
-using NeuralKernel.Core.Text;
 using NeuralKernel.Core.Tiktoken;
 using System.Text;
 

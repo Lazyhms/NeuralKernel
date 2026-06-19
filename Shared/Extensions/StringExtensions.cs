@@ -1,8 +1,6 @@
-﻿
+﻿namespace System;
 
-namespace NeuralKernel.Core.Text;
-
-public static class StringExtensions
+internal static class StringExtensions
 {
     public static string NormalizeNewlines(this string text, bool trim = false)
     {

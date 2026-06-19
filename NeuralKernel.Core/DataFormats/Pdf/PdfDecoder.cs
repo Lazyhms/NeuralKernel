@@ -1,5 +1,4 @@
 ﻿using NeuralKernel.Core.Pipeline;
-using NeuralKernel.Core.Text;
 using Microsoft.Extensions.Logging;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;

@@ -1,10 +1,6 @@
-﻿
+﻿namespace System.Text;
 
-using System.Text;
-
-namespace NeuralKernel.Core.Text;
-
-public static class StringBuilderExtensions
+internal static class StringBuilderExtensions
 {
     /// <summary>
     /// Append line using Unix line ending "\n"

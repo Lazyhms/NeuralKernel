@@ -1,5 +1,4 @@
 ﻿using NeuralKernel.Core.Pipeline;
-using NeuralKernel.Core.Text;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.Logging;

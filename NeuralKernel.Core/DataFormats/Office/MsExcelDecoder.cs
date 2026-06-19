@@ -1,6 +1,5 @@
 ﻿using ClosedXML.Excel;
 using NeuralKernel.Core.Pipeline;
-using NeuralKernel.Core.Text;
 using Microsoft.Extensions.Logging;
 using System.Text;
 

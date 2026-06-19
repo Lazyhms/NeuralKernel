@@ -1,4 +1,7 @@
-﻿﻿namespace NeuralKernel.Plugins.Document;
+﻿using Markdig;
+using System.Text;
+
+namespace NeuralKernel.Plugins.Document;
 
 public interface IDocumentHandler
 {
@@ -13,7 +16,18 @@ public interface IDocumentHandler
         return MimeType.Any(a => mimeType.StartsWith(a, StringComparison.OrdinalIgnoreCase));
     }
 
-    Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default);
+    async Task<string> ReadAsync(Stream data, CancellationToken cancellationToken = default)
+    {
+        using var reader = new StreamReader(data, Encoding.UTF8, true);
+        return await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+    }
 
-    Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default);
+    async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(content);
+
+        var bytes = Encoding.UTF8.GetBytes(content);
+        await target.WriteAsync(bytes, cancellationToken).ConfigureAwait(false);
+    }
 }

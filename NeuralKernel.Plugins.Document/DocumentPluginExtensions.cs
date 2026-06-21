@@ -18,6 +18,7 @@ public static class DocumentPluginExtensions
         builder.Services.AddSingleton<IDocumentHandler, Text.JsonHandler>();
         builder.Services.AddSingleton<IDocumentHandler, MsPowerPointHandler>();
         builder.Services.AddSingleton<IDocumentHandler, Text.MarkDownHandler>();
+        builder.Services.AddSingleton<ITempFileStorage, MemoryTempFileStorage>();
 
         builder.Plugins.AddFromType<DocumentPlugin>("Document");
 

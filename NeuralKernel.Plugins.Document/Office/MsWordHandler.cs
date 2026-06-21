@@ -42,9 +42,9 @@ public sealed class MsWordHandler : IDocumentHandler
         return Task.FromResult(readerContent.ToString().NormalizeNewlines(false));
     }
 
-    public async Task WriteAsync(Stream target, string content, CancellationToken cancellationToken = default)
+    public async Task WriteAsync(Stream data, string content, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(target);
+        ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(content);
 
         using var stream = new MemoryStream();
@@ -53,8 +53,11 @@ public sealed class MsWordHandler : IDocumentHandler
             var mainPart = document.AddMainDocumentPart();
             mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document(new Body());
 
-            var converter = new HtmlConverter(mainPart);
-            converter.ImageProcessing = ImageProcessingMode.Embed;
+            var converter = new HtmlConverter(mainPart)
+            {
+                SupportsHeadingNumbering = true,
+                ImageProcessing = ImageProcessingMode.Embed,
+            };
             var parsedContent = await converter.ParseAsync(Markdown.ToHtml(content, s_pipeline), cancellationToken);
             foreach (var element in parsedContent)
             {
@@ -65,6 +68,6 @@ public sealed class MsWordHandler : IDocumentHandler
         }
 
         stream.Position = 0;
-        await stream.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
+        await stream.CopyToAsync(data, cancellationToken).ConfigureAwait(false);
     }
 }

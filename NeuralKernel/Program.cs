@@ -1,19 +1,16 @@
-using NeuralKernel;
-using NeuralKernel.Apis;
-using NeuralKernel.Core.DataFormats;
-using NeuralKernel.Core.Pipeline;
-using NeuralKernel.Plugins;
-using NeuralKernel.Plugins.Core;
-using NeuralKernel.Plugins.Document;
-using NeuralKernel.Plugins.SpeechToText;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
+using NeuralKernel;
+using NeuralKernel.Apis;
+using NeuralKernel.Core.DataFormats;
+using NeuralKernel.Core.Pipeline;
+using NeuralKernel.Plugins.Core;
+using NeuralKernel.Plugins.Document;
 using OllamaSharp;
 using Qdrant.Client;
 using Serilog;
-using ModelContextProtocol.Client;
 
 Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
